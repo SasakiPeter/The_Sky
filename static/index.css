@@ -1,0 +1,16 @@
+.jumbotron-extend {
+  position: relative;
+  margin: 0;
+  height: 100vh;
+  min-height: 300px;
+  background: url(./images/the_sky.jpg) no-repeat center center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+p {
+  font-weight: bold;
+}
