@@ -14,19 +14,15 @@ def index():
     if request.method == "POST":
         print(request.form)
         if 'players' and 'level' in request.form.keys():
-            global players, height, width
             players = request.form['players'].split()
             height, width = [int(i) for i in request.form['level'].split()]
+            global mem
+            mem = Memory(height, width, players)
+            global images
+            path = "./static/images/sky"
+            files = os.listdir(path)
+            images = random.sample(files, mem.getMaxIndex())
             return redirect(url_for('memory'))
-
-
-@app.url_value_preprocessor
-def register(endpoint, values):
-    if endpoint == "memory":
-        values["mem"] = mem = Memory(height, width, players)
-        path = "./static/images/sky"
-        files = os.listdir(path)
-        values["images"] = random.sample(files, mem.getMaxIndex())
 
 
 def indexToImage(field, images):
@@ -45,7 +41,7 @@ def indexToImage(field, images):
 
 
 @app.route('/memory', methods=["GET", "POST"])
-def memory(mem, images):
+def memory():
     results, messages = "", "ここにメッセージが表示されます"
     if request.method == "GET":
         field = mem.getDisplay()

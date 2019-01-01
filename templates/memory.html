@@ -6,6 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="{{url_for('static',filename='memory.css')}}" />
+    <style>
+        .btn{
+              --width :{{width}};
+              width:calc(100vmin/var(--width));
+              height:calc(100vmin/var(--width));
+        }
+    </style>
     <title>The Sky</title>
   </head>
   <body>
@@ -16,9 +23,8 @@
       <div>
         {% for j,image in enumerate(line) %}
         <button
-        style="background-image:url({{url_for('static',filename=image.url)}});
-          width:calc(100vmin/{{width}});
-          height:calc(100vmin/{{width}})"
+          class="btn"
+          style="--url:url({{url_for('static',filename=image.url)}});background-image:var(--url);"
           name="{{image.label}}"
           value="{{i,j}}"
           >
