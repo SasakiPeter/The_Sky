@@ -149,8 +149,11 @@ class Memory:
         else:
             # print("不正解")
             self.player_index += 1
-            playerName = self.playersName[self.player_index % self.N]
-            self.message = f"{playerName}さんの番です。プレイヤーを交代してください"
+            if len(self.playersName) > 1:
+                playerName = self.playersName[self.player_index % self.N]
+                self.message = f"{playerName}さんの番です。プレイヤーを交代してください。"
+            else:
+                self.message = "ハズレです。次のカードを選択してください。"
             self.__closeFlag = True
 
     # cui用
