@@ -14,7 +14,6 @@ class Object(Memory):
 
     @classmethod
     def fromJSON(cls, json):
-        print(json)
         obj = cls(json["H"], json["W"], json["players"])
         obj._Memory__closeFlag = json["_Memory__closeFlag"]
         obj._Memory__removeFlag = json["_Memory__removeFlag"]
@@ -36,7 +35,7 @@ def index():
         return render_template('index.html')
 
     if request.method == "POST":
-        print(request.form)
+        # print(request.form)
         if 'players' and 'level' in request.form.keys():
             players = request.form['players'].split()
             height, width = [int(i) for i in request.form['level'].split()]

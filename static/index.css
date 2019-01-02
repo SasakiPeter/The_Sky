@@ -14,3 +14,10 @@
 p {
   font-weight: bold;
 }
+
+@media (max-width: 576px) {
+  .jumbotron-extend {
+    background: url(./images/the_sky_for_mobile.jpg) no-repeat center center;
+    background-size: cover;
+  }
+}
