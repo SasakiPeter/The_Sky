@@ -72,7 +72,6 @@ class Memory:
         # 1d to 2d
         self.answer = [cards[i: i+self.W]
                        for i in range(0, self.H * self.W, self.H)]
-        self.cards = self.answer.copy()
 
     def createDisplay(self):
         self.display = [[0 for i in range(self.W)] for j in range(self.H)]

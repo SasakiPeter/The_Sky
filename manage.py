@@ -1,9 +1,33 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import os
+import json
 import random
 from memory import Memory
 
 app = Flask(__name__)
+app.config.from_object('config')
+
+
+class Object(Memory):
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2)
+
+    @classmethod
+    def fromJSON(cls, json):
+        print(json)
+        obj = cls(json["H"], json["W"], json["players"])
+        obj._Memory__closeFlag = json["_Memory__closeFlag"]
+        obj._Memory__removeFlag = json["_Memory__removeFlag"]
+        obj.answer = json["answer"]
+        obj.cache = json["cache"]
+        obj.display = json["display"]
+        obj.endFlag = json["endFlag"]
+        obj.history = json["history"]
+        obj.message = json["message"]
+        obj.player_index = json["player_index"]
+        obj.players = json["players"]
+        obj.playersName = json["playersName"]
+        return obj
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -16,12 +40,8 @@ def index():
         if 'players' and 'level' in request.form.keys():
             players = request.form['players'].split()
             height, width = [int(i) for i in request.form['level'].split()]
-            global mem
-            mem = Memory(height, width, players)
-            global images
-            path = "./static/images/sky"
-            files = os.listdir(path)
-            images = random.sample(files, mem.getMaxIndex())
+            mem = Object(height, width, players)
+            session['object'] = mem.toJSON()
             return redirect(url_for('memory'))
 
 
@@ -43,6 +63,15 @@ def indexToImage(field, images):
 @app.route('/memory', methods=["GET", "POST"])
 def memory():
     results, messages = "", "ここにメッセージが表示されます"
+    mem = Object.fromJSON(json.loads(session['object']))
+
+    if 'images' not in session:
+        path = "./static/images/sky"
+        files = os.listdir(path)
+        session['images'] = images = random.sample(files, mem.getMaxIndex())
+    else:
+        images = session['images']
+
     if request.method == "GET":
         field = mem.getDisplay()
         field = indexToImage(field, images)
@@ -64,6 +93,7 @@ def memory():
                 messages = mem.getMessages()
         field = indexToImage(field, images)
         width = mem.getWidth()
+        session['object'] = mem.toJSON()
         return render_template('memory.html', field=field, enumerate=enumerate, results=results, message=messages, width=width)
 
 
